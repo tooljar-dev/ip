@@ -14,6 +14,7 @@
     "check": "biome check . && tsc --noEmit && vitest run && wrangler deploy --config wrangler.jsonc --dry-run --outdir .wrangler/dry-run",
     "cf:dry": "wrangler deploy --config wrangler.jsonc --dry-run --outdir .wrangler/dry-run",
     "images": "node scripts/make-images.mjs",
+    "map": "node scripts/make-map.mjs",
     "smoke": "node scripts/smoke.mjs"
   },
   "devDependencies": {

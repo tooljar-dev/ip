@@ -94,6 +94,27 @@ describe("the home address", () => {
     expect(data.hostname).toBe("host.silknet.example");
   });
 
+  it("offers a support summary, the calm promise and a map dot", async () => {
+    const body = await (await call("/", { headers: BROWSER })).text();
+    const report = body.match(/data-copy="([^"]*)" data-report/)?.[1] ?? "";
+    expect(report).toContain("IP address: 176.221.158.188 (IPv4)");
+    expect(report).toContain("IPv6: checking…");
+    expect(report).toContain("Internet provider: JSC Silknet (AS35805)");
+    expect(report).toContain("Approximate location: Tbilisi, Georgia");
+    expect(report).toContain("Network type: Regular internet provider (estimate)");
+    expect(report).toContain("Browser: Chrome 141 on Windows");
+    expect(body).toContain("<span>No VPN sales</span>");
+    // Tbilisi (44.83 E, 41.69 N) on the 360 × 150 map: left 62.5 %, top 28.9 %.
+    expect(body).toContain('src="/world.svg"');
+    expect(body).toContain('style="left:62.5%;top:28.9%"');
+  });
+
+  it("leaves the map out when there are no coordinates", async () => {
+    const body = await (await call("/", { headers: BROWSER, cf: {} })).text();
+    expect(body).not.toContain("world.svg");
+    expect(body).toContain('<section class="hero" aria-label="Your public IP address">');
+  });
+
   it("shows IPv6 visitors their IPv6 and checks for IPv4", async () => {
     const body = await (await call("/", { headers: BROWSER, ip: "2001:db8::1" })).text();
     expect(body).toContain('<p class="ip v6" id="ip">2001:db8::1</p>');
@@ -130,9 +151,28 @@ describe("the API", () => {
       timezone: "Asia/Tbilisi",
       asn: 35805,
       org: "JSC Silknet",
+      network_type: "isp",
+      is_tor: false,
       is_eu: false,
       user_agent: "curl/8.22.0",
     });
+  });
+
+  it("marks Tor exits for sure and other networks by type", async () => {
+    mockDns(null);
+    const tor = (await (
+      await call("/json", { cf: { ...TBILISI, country: "T1", asn: 24940 } })
+    ).json()) as Record<string, unknown>;
+    expect(tor.is_tor).toBe(true);
+    expect(tor.network_type).toBe("tor");
+    expect(tor.country_name).toBe("Tor network");
+    const vpn = (await (
+      await call("/json", { cf: { ...TBILISI, asn: 9009, asOrganization: "M247 Europe SRL" } })
+    ).json()) as Record<string, unknown>;
+    expect(vpn.network_type).toBe("hosting");
+    expect(vpn.is_tor).toBe(false);
+    const empty = (await (await call("/json", { cf: {} })).json()) as Record<string, unknown>;
+    expect(empty.network_type).toBeNull();
   });
 
   it("still answers when reverse DNS fails", async () => {
@@ -255,6 +295,17 @@ describe("pages and SEO", () => {
     expect(vpn).toContain('data-state="warn"');
     const home = await (await call("/vpn-check", { headers: BROWSER })).text();
     expect(home).toContain("looks like a regular internet provider");
+    const tor = await (
+      await call("/vpn-check", { headers: BROWSER, cf: { ...TBILISI, country: "T1" } })
+    ).text();
+    expect(tor).toContain("Network: you are using Tor");
+    const relay = await (
+      await call("/vpn-check", {
+        headers: BROWSER,
+        cf: { ...TBILISI, asn: 13335, asOrganization: "Cloudflare, Inc." },
+      })
+    ).text();
+    expect(relay).toContain("Network: looks like a privacy relay");
   });
 
   it("shows the IPv6 check to IPv4 visitors", async () => {

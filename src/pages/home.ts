@@ -1,6 +1,7 @@
 import { html } from "../html";
 import { ICONS } from "../icons";
 import type { Page } from "../layout";
+import { NETWORK_LABEL } from "../network";
 import { SITE } from "../site";
 import { uaLine } from "../ua";
 import { placeLine, type Visitor } from "../visitor";
@@ -41,8 +42,12 @@ const FAQ: Faq[] = [
     a: "Use a VPN, the Tor Browser or a proxy. Websites then see the IP of that service instead of yours. Our VPN check page shows whether it is working.",
   },
   {
+    q: 'What does "Copy for support" do?',
+    a: "It copies a short summary of your connection: your IP addresses, internet provider, approximate location, network type, browser and the time. Paste it into a chat or email when a help desk, your internet provider or an IT person asks for your IP. Nothing is sent anywhere until you paste it yourself.",
+  },
+  {
     q: "Do you save my IP address?",
-    a: "No. This page reads your IP to show it to you, and then forgets it. We set no cookies and show no ads.",
+    a: "No. This page reads your IP to show it to you, and then forgets it. We set no cookies and show no ads. The privacy page explains the details.",
   },
 ];
 
@@ -64,7 +69,12 @@ ${card(
   place ?? unknown(),
   html`${v.timezone ? `Time zone: ${v.timezone}. ` : ""}<a href="/location">How exact is this?</a>`,
 )}
-${card(ICONS.globe, "Internet provider", v.org ?? unknown(), v.asn ? `Network AS${v.asn}` : undefined)}
+${card(
+  ICONS.globe,
+  "Internet provider",
+  v.org ?? unknown(),
+  html`${v.asn ? `Network AS${v.asn}. ` : ""}${v.network === "unknown" ? "" : `${NETWORK_LABEL[v.network]}. `}<a href="/vpn-check">Am I on a VPN?</a>`,
+)}
 ${card(
   ICONS.server,
   "Hostname",

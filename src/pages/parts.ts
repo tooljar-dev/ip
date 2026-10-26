@@ -1,25 +1,67 @@
 // Building blocks shared by the pages.
 import { type Html, html } from "../html";
 import { ICONS } from "../icons";
+import { NETWORK_LABEL } from "../network";
 import { SITE } from "../site";
-import type { Visitor } from "../visitor";
+import { uaLine } from "../ua";
+import { placeLine, type Visitor } from "../visitor";
 
 export interface Faq {
   q: string;
   a: string;
 }
 
+// The world map in public/world.svg: longitude -180..180, latitude 85..-65.
+// Keep in sync with scripts/make-map.mjs.
+const MAP = { north: 85, south: -65 };
+
+/** A small world map with a dot where the IP seems to be. Empty when we have no coordinates. */
+export function worldMap(v: Visitor): Html {
+  if (v.latitude === null || v.longitude === null) return html``;
+  const pct = (n: number) => Math.min(100, Math.max(0, n)).toFixed(1);
+  const left = pct(((v.longitude + 180) / 360) * 100);
+  const top = pct(((MAP.north - v.latitude) / (MAP.north - MAP.south)) * 100);
+  return html`<figure class="map" role="img" aria-label="${`World map with a dot near ${placeLine(v) ?? "your network"}`}">
+<img src="/world.svg" alt="" width="360" height="150">
+<span class="pin" style="${`left:${left}%;top:${top}%`}"></span>
+</figure>`;
+}
+
+/**
+ * The short summary "Copy for support" puts on the clipboard. The line for the other IP
+ * version says "checking…" until app.js fills it in.
+ */
+export function supportReport(v: Visitor, now = new Date()): string {
+  const other = v.version === 4 ? 6 : 4;
+  return [
+    `My internet connection, checked on ${SITE.host}`,
+    `IP address: ${v.ip} (IPv${v.version})`,
+    `IPv${other}: checking…`,
+    `Internet provider: ${v.org ?? "not known"}${v.asn ? ` (AS${v.asn})` : ""}`,
+    `Approximate location: ${placeLine(v) ?? "not known"}`,
+    `Network type: ${NETWORK_LABEL[v.network]}`,
+    `Browser: ${uaLine(v.userAgent) ?? "not known"}`,
+    `Time: ${now.toISOString().slice(0, 16).replace("T", " ")} UTC`,
+  ].join("\n");
+}
+
 /** The big "your IP" box. JavaScript later fills in the other IP family (v4 or v6). */
 export function ipHero(v: Visitor, label = "Your public IP address"): Html {
   const other = v.version === 4 ? 6 : 4;
-  return html`<section class="hero" aria-label="${label}">
+  const map = worldMap(v);
+  return html`<section class="hero${map.value ? " has-map" : ""}" aria-label="${label}">
+<div class="hero-main">
 <p class="label">${label}</p>
 <p class="ip${v.version === 6 ? " v6" : ""}" id="ip">${v.ip}</p>
 <div class="hero-row">
 <button class="btn" type="button" data-copy="${v.ip}">Copy IP</button>
+<button class="btn ghost" type="button" data-copy="${supportReport(v)}" data-report title="Copies a short summary of your connection to paste into a support chat or email">Copy for support</button>
 <span class="chip">This is your <b>IPv${v.version}</b> address</span>
 <span class="chip">IPv${other}: <span data-other-ip="${other}" data-known-ip="${v.ip}">checking…</span></span>
 </div>
+<p class="calm"><span>No ads</span><span>No cookies</span><span>No VPN sales</span></p>
+</div>
+${map}
 </section>`;
 }
 

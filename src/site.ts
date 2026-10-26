@@ -5,7 +5,7 @@ export const SITE = {
   name: "tooljar IP",
   repo: "https://github.com/tooljar-dev/ip",
   // The day the page texts last changed. Used as <lastmod> in the sitemap, so keep it honest.
-  updated: "2026-10-25",
+  updated: "2026-10-27",
 } as const;
 
 export interface Env {

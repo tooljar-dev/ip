@@ -1,6 +1,7 @@
 // Everything we know about the visitor, read from the request at the Cloudflare edge.
 // Cloudflare sets CF-Connecting-IP itself (a client can't fake it) and fills request.cf
 // with location and network data for that IP.
+import { type NetworkKind, networkKind } from "./network";
 
 export interface Visitor {
   ip: string;
@@ -19,6 +20,8 @@ export interface Visitor {
   asn: number | null;
   /** The network that owns the IP, usually the internet provider (ISP). */
   org: string | null;
+  /** Tor (certain), or an estimate: privacy relay, hosting/VPN, regular provider. */
+  network: NetworkKind;
   isEU: boolean;
   /** Code of the Cloudflare data center that answered, e.g. "TBS". */
   colo: string | null;
@@ -59,6 +62,8 @@ export function readVisitor(request: Request): Visitor {
   const ip = request.headers.get("cf-connecting-ip")?.trim() || "127.0.0.1";
   const rawCountry = str(cf.country)?.toUpperCase() ?? null;
   const country = rawCountry === "XX" ? null : rawCountry;
+  const asn = num(cf.asn);
+  const org = str(cf.asOrganization);
   return {
     ip,
     version: ip.includes(":") ? 6 : 4,
@@ -72,8 +77,9 @@ export function readVisitor(request: Request): Visitor {
     latitude: num(cf.latitude),
     longitude: num(cf.longitude),
     timezone: str(cf.timezone),
-    asn: num(cf.asn),
-    org: str(cf.asOrganization),
+    asn,
+    org,
+    network: networkKind({ country, asn, org }),
     isEU: cf.isEUCountry === "1" || cf.isEUCountry === true,
     colo: str(cf.colo),
     httpProtocol: str(cf.httpProtocol),
@@ -109,6 +115,8 @@ export function toJson(v: Visitor, hostname: string | null) {
     timezone: v.timezone,
     asn: v.asn,
     org: v.org,
+    network_type: v.network === "unknown" ? null : v.network,
+    is_tor: v.network === "tor",
     is_eu: v.isEU,
     user_agent: v.userAgent || null,
   };

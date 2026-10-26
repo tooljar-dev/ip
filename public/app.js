@@ -47,6 +47,13 @@
     } else {
       el.textContent = el.dataset.none || "not available";
     }
+    // The "Copy for support" summary has a line for this IP version too.
+    for (const button of $$("[data-report]")) {
+      button.dataset.copy = button.dataset.copy.replace(
+        `IPv${family}: checking…`,
+        `IPv${family}: ${valid ? ip : "not available"}`,
+      );
+    }
   });
 
   // Reverse DNS name, from our own API. (/json, not /hostname: /hostname answers 404 when

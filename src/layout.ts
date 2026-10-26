@@ -53,6 +53,16 @@ h3{font-size:1.1rem;margin:22px 0 4px}
 .ip{font-size:clamp(2.1rem,9vw,4.2rem);font-weight:800;line-height:1.1;letter-spacing:-.02em;margin:6px 0 16px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .ip.v6{font-size:clamp(1.35rem,4.6vw,2.5rem)}
 .hero-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.hero.has-map{display:grid;gap:22px 32px;align-items:center}
+@media (min-width:860px){.hero.has-map{grid-template-columns:minmax(0,1fr) 300px}}
+.hero-main{min-width:0}
+.map{position:relative;margin:0;width:100%;max-width:300px;justify-self:center}
+.map img{display:block;width:100%;height:auto}
+.map .pin{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--surface)}
+@media (prefers-reduced-motion:no-preference){.map .pin::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--accent);animation:ping 2.4s ease-out infinite}}
+@keyframes ping{from{transform:scale(.5);opacity:.9}to{transform:scale(1.9);opacity:0}}
+.calm{display:flex;flex-wrap:wrap;gap:4px 18px;margin:16px 0 0;color:var(--muted);font-size:.92rem;font-weight:600}
+.calm span::before{content:"✓ ";color:var(--ok)}
 .chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px 12px;font-size:.92rem;font-weight:600;overflow-wrap:anywhere}
 .chip b{color:var(--accent)}
 .btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:10px 20px;font:inherit;font-weight:700;background:var(--accent);color:var(--accent-ink);cursor:pointer;text-decoration:none}
@@ -161,6 +171,7 @@ ${page.body}
 <li><a href="/public-vs-private-ip">Public vs private IP</a></li>
 <li><a href="/headers">HTTP headers</a></li>
 <li><a href="/api">Free IP API</a></li>
+<li><a href="/privacy">Privacy</a></li>
 <li><a href="${SITE.repo}">Source code on GitHub</a></li>
 </ul>
 </div>

@@ -24,11 +24,13 @@ The "what is my IP" site and free API at **https://ip.tooljar.dev**: one Cloudfl
 | `src/index.ts`            | Router: which address returns what, response headers (CSP, CORS, caching)               |
 | `src/negotiate.ts`        | Who gets the page and who gets plain text / JSON                                        |
 | `src/visitor.ts`          | Reads IP + `request.cf`; the public JSON shape (`toJson`)                               |
+| `src/network.ts`          | Network type: Tor (Cloudflare's `T1`), relay / hosting ASN lists, owner-name fallback   |
 | `src/pages/`              | HTML pages; `parts.ts` has the shared blocks and FAQ/structured data helpers            |
 | `src/layout.ts`           | `<head>` (SEO tags), header, footer, all CSS                                            |
 | `src/seo.ts`              | `PAGE_PATHS`, robots.txt, sitemap.xml, llms.txt, security.txt                           |
 | `public/`                 | Static files served before the Worker: `app.js`, icons, `og.png`, the IndexNow key file |
 | `scripts/make-images.mjs` | Rebuilds the PNG icons and `og.png`                                                     |
+| `scripts/make-map.mjs`    | Rebuilds `public/world.svg` from Natural Earth land data (public domain)                |
 | `scripts/smoke.mjs`       | Live checks against a running copy                                                      |
 | `test/`                   | Vitest tests that run inside workerd                                                    |
 
@@ -45,7 +47,9 @@ The "what is my IP" site and free API at **https://ip.tooljar.dev**: one Cloudfl
 - **Commits:** one line `type(scope): summary` (`feature`, `bugfix`, `refactor`, `docs`, `chore`), no body.
 - **API is a product:** paths and JSON field names are stable. Add fields, never rename or remove them. Update `README.md`, `src/pages/api.ts` and `llms.txt` together.
 - **Every value in a page goes through the `html` template tag** (auto-escaped). Use `raw()` only for strings we wrote ourselves.
-- **New page:** add it to `PAGES` in `src/index.ts`, to `PAGE_PATHS` in `src/seo.ts`, to `GUIDES` in `src/pages/parts.ts`, and bump `SITE.updated` when page texts change.
+- **New page:** add it to `PAGES` in `src/index.ts`, to `PAGE_PATHS` in `src/seo.ts`, to `GUIDES` in `src/pages/parts.ts` if it is a guide (the privacy page isn't; it sits in the footer), add it to `scripts/smoke.mjs`, and bump `SITE.updated` when page texts change.
+- **Network lists (`src/network.ts`):** add an ASN only after checking its registered owner (RIPEstat: `https://stat.ripe.net/data/as-overview/data.json?resource=AS<number>`). Never add one by name alone, and never copy lists from other projects' private code. Only Tor may be called certain; everything else is an "estimate" in the texts.
+- **Privacy texts:** `/privacy`, the footer line and the home FAQ must stay true. If you add logging, a new third-party request or analytics, update them first and ask Saba.
 - **Privacy promise:** the site says it doesn't store IPs. Don't add logging, Workers Logs or analytics that store IPs without changing that text and asking Saba.
 - **Plain, simple words** in all docs and page texts.
 

@@ -39,6 +39,11 @@ check(
   json.res.headers.get("access-control-allow-origin") === "*",
 );
 check("/json has location data", Boolean(data.country), `country=${data.country}, org=${data.org}`);
+check(
+  "/json has the network type",
+  typeof data.is_tor === "boolean" && "network_type" in data,
+  `network_type=${data.network_type}, is_tor=${data.is_tor}`,
+);
 
 for (const path of [
   "/",
@@ -48,6 +53,7 @@ for (const path of [
   "/public-vs-private-ip",
   "/headers",
   "/api",
+  "/privacy",
 ]) {
   const page = await get(path, BROWSER);
   check(
@@ -78,6 +84,7 @@ check("llms.txt", (await get("/llms.txt")).body.startsWith("# tooljar IP"));
 for (const [path, type] of [
   ["/app.js", "javascript"],
   ["/og.png", "image/png"],
+  ["/world.svg", "image/svg+xml"],
   ["/favicon.svg", "image/svg+xml"],
   ["/favicon.ico", "icon"],
 ]) {

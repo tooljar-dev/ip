@@ -10,6 +10,7 @@ export const PAGE_PATHS = [
   "/public-vs-private-ip",
   "/headers",
   "/api",
+  "/privacy",
 ] as const;
 
 export function robotsTxt(): string {
@@ -43,10 +44,11 @@ The API only answers about the IP that calls it. It can't look up other IP addre
 ## API
 
 - [Plain-text IP](${o}/ip): \`curl ${SITE.host}\` prints only the IP and a new line.
-- [JSON](${o}/json): fields ip, version, hostname, city, region, region_code, country, country_name, continent, postal_code, latitude, longitude, timezone, asn, org, is_eu, user_agent. Unknown values are null.
+- [JSON](${o}/json): fields ip, version, hostname, city, region, region_code, country, country_name, continent, postal_code, latitude, longitude, timezone, asn, org, network_type, is_tor, is_eu, user_agent. Unknown values are null. network_type is "isp", "hosting", "relay" or "tor"; only "tor" is certain, the rest is an estimate.
 - Single fields as plain text: ${o}/city, /region, /country, /postal, /loc, /timezone, /asn, /org, /hostname, /ua (404 with an empty body when unknown).
 - [Request headers](${o}/headers): JSON for scripts, a web page for browsers.
 - [API documentation](${o}/api)
+- Fair use: up to 50 requests in 10 seconds per IP, then HTTP 429 for 10 seconds. For steady use, about one request a second or less; monitors every 5 minutes or slower. Free for commercial use, no uptime promise.
 
 ## Guides
 
@@ -58,6 +60,7 @@ The API only answers about the IP that calls it. It can't look up other IP addre
 ## Source
 
 - [Source code (MIT license)](${SITE.repo})
+- [Privacy](${o}/privacy): no logs, no cookies, no ads.
 `;
 }
 

@@ -1,6 +1,5 @@
-import { html } from "../html";
+import { type Html, html } from "../html";
 import type { Page } from "../layout";
-import { networkKind } from "../network";
 import { placeLine, type Visitor } from "../visitor";
 import { breadcrumbData, type Faq, faqData, faqSection, ipHero, relatedLinks } from "./parts";
 
@@ -20,21 +19,37 @@ const FAQ: Faq[] = [
     a: "Not for sure. It can see that your IP belongs to a hosting or VPN company, or that your clock and your IP's time zone don't match. Some VPNs use home internet addresses, and then even that is hard to spot.",
   },
   {
+    q: "Can this page tell if I use Tor?",
+    a: "Yes, and that answer is certain. The Tor Project publishes the list of its exit servers, and Cloudflare marks visitors who come from them. VPNs and privacy relays have no such list, so for them the page can only estimate.",
+  },
+  {
     q: "Does this test check DNS leaks?",
     a: "No. A DNS leak (your device asking your provider's servers for website names instead of the VPN's) needs a special DNS server to test. Many VPN providers offer a DNS leak test on their own site.",
   },
 ];
 
+function networkCheck(v: Visitor): Html {
+  const owner = html`<strong>${v.org ?? "an unknown owner"}</strong>${v.asn ? ` (AS${v.asn})` : ""}`;
+  switch (v.network) {
+    case "tor":
+      return html`<div class="check" data-state="warn"><span class="dot">!</span><div><h3>Network: you are using Tor</h3>
+<p>Your connection comes out of the Tor network, through a server owned by ${owner}. Websites see that Tor server, not your real IP. This one is certain: the list of Tor exit servers is public, and Cloudflare marks them, so many websites can tell too.</p></div></div>`;
+    case "relay":
+      return html`<div class="check" data-state="warn"><span class="dot">!</span><div><h3>Network: looks like a privacy relay</h3>
+<p>Your IP belongs to ${owner}, which runs privacy relays such as iCloud Private Relay and Cloudflare WARP (the 1.1.1.1 app). Websites see the relay's address and only a rough region, not your own IP. This is an estimate.</p></div></div>`;
+    case "hosting":
+      return html`<div class="check" data-state="warn"><span class="dot">!</span><div><h3>Network: hosting or VPN network (estimate)</h3>
+<p>Your IP belongs to ${owner}. Home internet doesn't usually come from such networks, so you are probably using a VPN, a proxy or a server.</p></div></div>`;
+    case "isp":
+      return html`<div class="check" data-state="ok"><span class="dot">✓</span><div><h3>Network: looks like a regular internet provider</h3>
+<p>Your IP belongs to ${owner}. If you meant to use a VPN, websites can probably see your real provider. Some VPNs use home addresses, so this is a hint, not proof.</p></div></div>`;
+    default:
+      return html`<div class="check"><span class="dot">?</span><div><h3>Network: not known</h3><p>We couldn't tell who owns your IP address.</p></div></div>`;
+  }
+}
+
 export function vpnPage(v: Visitor): Page {
-  const kind = networkKind(v.org);
-  const network =
-    kind === "hosting"
-      ? html`<div class="check" data-state="warn"><span class="dot">!</span><div><h3>Network: looks like a VPN, hosting or cloud company</h3>
-<p>Your IP belongs to <strong>${v.org}</strong>${v.asn ? ` (AS${v.asn})` : ""}. Home internet doesn't usually come from such networks, so you are probably using a VPN, a proxy or a server.</p></div></div>`
-      : kind === "isp"
-        ? html`<div class="check" data-state="ok"><span class="dot">✓</span><div><h3>Network: looks like a regular internet provider</h3>
-<p>Your IP belongs to <strong>${v.org}</strong>${v.asn ? ` (AS${v.asn})` : ""}. If you meant to use a VPN, websites can probably see your real provider. Some VPNs use home addresses, so this is a hint, not proof.</p></div></div>`
-        : html`<div class="check"><span class="dot">?</span><div><h3>Network: not known</h3><p>We couldn't tell who owns your IP address.</p></div></div>`;
+  const network = networkCheck(v);
 
   const body = html`<h1>Am I using a VPN?</h1>
 <p class="lead">Three quick checks show what websites can see: the network your IP comes from, your time zone, and whether your browser leaks another IP through WebRTC.</p>
@@ -49,7 +64,7 @@ ${network}
 <article>
 <h2>What these checks mean</h2>
 <h3>Network</h3>
-<p>Every IP belongs to a network with an owner. Home and mobile internet come from providers like Comcast or Vodafone. VPN servers usually sit in data centers owned by hosting companies. We look at the owner's name to guess which one you have.</p>
+<p>Every IP belongs to a network with an owner and a number (ASN). Home and mobile internet come from providers like Comcast or Vodafone. VPN servers usually sit in data centers owned by hosting companies. We check the network's number against a list of known hosting, VPN and privacy-relay networks, and then the owner's name, to guess which one you have. Tor is different: the list of Tor exit servers is public, so that answer is certain.</p>
 <h3>Time zone</h3>
 <p>Your browser knows your device's time zone, and your IP has a time zone too. If they differ, you might be using a VPN or proxy in another country, or you are simply traveling.</p>
 <h3>WebRTC</h3>

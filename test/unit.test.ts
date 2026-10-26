@@ -121,27 +121,46 @@ describe("pickFormat", () => {
 });
 
 describe("networkKind", () => {
-  it("guesses hosting and VPN networks", () => {
-    for (const org of [
-      "DigitalOcean, LLC",
-      "M247 Europe SRL",
-      "Google LLC",
-      "Hetzner Online GmbH",
-    ]) {
-      expect(networkKind(org), org).toBe("hosting");
+  const net = (asn: number | null, org: string | null, country: string | null = "DE") =>
+    networkKind({ country, asn, org });
+
+  it("is sure about Tor, whatever the network", () => {
+    expect(net(24940, "Hetzner Online GmbH", "T1")).toBe("tor");
+    expect(net(null, null, "T1")).toBe("tor");
+  });
+
+  it("knows privacy relays by their network number", () => {
+    expect(net(13335, "Cloudflare, Inc.")).toBe("relay");
+    expect(net(36183, "Akamai Technologies, Inc.")).toBe("relay");
+  });
+
+  it("knows hosting and VPN networks by number, even with an unhelpful name", () => {
+    expect(net(9009, "M247 Europe SRL")).toBe("hosting");
+    expect(net(136787, "PacketHub S.A.")).toBe("hosting");
+    expect(net(16509, "AMAZON-02")).toBe("hosting");
+    expect(net(216025, "Mullvad VPN AB")).toBe("hosting");
+  });
+
+  it("falls back to the owner's name for networks not on the list", () => {
+    for (const org of ["Example Hosting Ltd", "Tiny VPS Co", "Some Cloud Servers"]) {
+      expect(net(64500, org), org).toBe("hosting");
     }
   });
 
   it("treats internet providers as providers", () => {
-    for (const org of [
-      "JSC Silknet",
-      "Comcast Cable Communications, LLC",
-      "Nordnet",
-      "Google Fiber Inc.",
-    ]) {
-      expect(networkKind(org), org).toBe("isp");
+    for (const [asn, org] of [
+      [35805, "JSC Silknet"],
+      [7922, "Comcast Cable Communications, LLC"],
+      [8100, "Splice Internet Pty Ltd"],
+      [64500, "Nordnet"],
+      [16591, "Google Fiber Inc."],
+    ] as const) {
+      expect(net(asn, org), org).toBe("isp");
     }
-    expect(networkKind(null)).toBe("unknown");
+  });
+
+  it("says unknown when there is nothing to go on", () => {
+    expect(net(null, null)).toBe("unknown");
   });
 });
 

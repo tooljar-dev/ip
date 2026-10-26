@@ -1,7 +1,7 @@
 import { html } from "../html";
 import type { Page } from "../layout";
 import { placeLine, type Visitor } from "../visitor";
-import { breadcrumbData, type Faq, faqData, faqSection, relatedLinks } from "./parts";
+import { breadcrumbData, type Faq, faqData, faqSection, relatedLinks, worldMap } from "./parts";
 
 const PATH = "/location";
 
@@ -38,13 +38,17 @@ export function locationPage(v: Visitor): Page {
     v.latitude !== null && v.longitude !== null
       ? `https://www.openstreetmap.org/?mlat=${v.latitude.toFixed(3)}&mlon=${v.longitude.toFixed(3)}#map=10/${v.latitude.toFixed(3)}/${v.longitude.toFixed(3)}`
       : null;
+  const drawn = worldMap(v);
 
   const body = html`<h1>What is my IP location?</h1>
 <p class="lead">This is where your IP address seems to be, according to Cloudflare's location data. It is the network's location, so treat it as "roughly here".</p>
-<section class="hero" aria-label="Your IP location">
+<section class="hero${drawn.value ? " has-map" : ""}" aria-label="Your IP location">
+<div class="hero-main">
 <p class="label">Your IP address ${v.ip} points to</p>
 <p class="ip v6">${place ?? "an unknown place"}</p>
 ${map ? html`<div class="hero-row"><a class="btn ghost" href="${map}" rel="noopener">See this area on OpenStreetMap</a></div>` : ""}
+</div>
+${drawn}
 </section>
 <table>
 <tbody>

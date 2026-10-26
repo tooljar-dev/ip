@@ -9,6 +9,7 @@ import { homePage } from "./pages/home";
 import { ipv6Page } from "./pages/ipv6";
 import { locationPage } from "./pages/location";
 import { notFoundPage } from "./pages/notfound";
+import { privacyPage } from "./pages/privacy";
 import { privatePage } from "./pages/private";
 import { vpnPage } from "./pages/vpn";
 import { reverseDns } from "./rdns";
@@ -60,6 +61,7 @@ const PAGES: Record<string, (v: Visitor, request: Request) => Page> = {
   "/public-vs-private-ip": privatePage,
   "/headers": (_v, request) => headersPage(request),
   "/api": apiPage,
+  "/privacy": () => privacyPage(),
 };
 
 function text(body: string, status = 200, extra: Record<string, string> = {}): Response {
