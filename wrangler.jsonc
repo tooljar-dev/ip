@@ -1,0 +1,26 @@
+// Cloudflare Worker "tooljar-ip": the page and the API at https://ip.tooljar.dev.
+// SAFETY (workspace rule, decision 0004): run wrangler ONLY from this folder, ALWAYS with
+// --config wrangler.jsonc, and run `npm run cf:dry` before every deploy.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "tooljar-ip",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-20",
+  // No *.workers.dev copy of the site: it would compete with ip.tooljar.dev in search.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "ip.tooljar.dev", "custom_domain": true }],
+  // Static files (icons, preview image, app.js). A path with no file here goes to the Worker.
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    // Cloudflare Web Analytics site token. It is public (it appears in every page).
+    // Empty = no analytics script.
+    "ANALYTICS_TOKEN": ""
+  },
+  // No stored request logs: the privacy note on the site says we don't keep your IP.
+  // Use `npx wrangler tail --config wrangler.jsonc` to watch live requests when debugging.
+  "observability": { "enabled": false }
+}

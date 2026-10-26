@@ -1,0 +1,28 @@
+{
+  "name": "tooljar-ip",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "What is my IP: a fast page and a free API for your public IP, location and network. Runs on a Cloudflare Worker.",
+  "scripts": {
+    "dev": "wrangler dev --config wrangler.jsonc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "check": "biome check . && tsc --noEmit && vitest run && wrangler deploy --config wrangler.jsonc --dry-run --outdir .wrangler/dry-run",
+    "cf:dry": "wrangler deploy --config wrangler.jsonc --dry-run --outdir .wrangler/dry-run",
+    "images": "node scripts/make-images.mjs",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.3",
+    "@cloudflare/vitest-plugin": "1.4.7",
+    "@cloudflare/workers-types": "5.20261025.1",
+    "@resvg/resvg-js": "2.6.2",
+    "typescript": "7.0.2",
+    "vitest": "5.0.5",
+    "wrangler": "4.152.0"
+  }
+}
