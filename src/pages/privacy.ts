@@ -1,6 +1,5 @@
 import { html } from "../html";
 import type { Page } from "../layout";
-import { SITE } from "../site";
 import { breadcrumbData } from "./parts";
 
 const PATH = "/privacy";
@@ -21,8 +20,10 @@ export function privacyPage(): Page {
 <p>To show your other IP version, the page asks icanhazip.com (run by Cloudflare) on an IPv4-only or IPv6-only address. The VPN check asks Cloudflare's STUN server which IP a video call would use. These answers stay in your browser; we don't receive them.</p>
 <h2>Copy for support</h2>
 <p>The "Copy for support" button only puts a summary on your clipboard. Nothing is sent anywhere until you paste it yourself.</p>
+<h2>Who runs this site</h2>
+<p>tooljar IP is made and run by Saba Janelidze, a developer in Tbilisi, Georgia (<a href="https://www.sabajanelidze.com">sabajanelidze.com</a>). Questions about privacy: <a href="mailto:hello@sabajanelidze.com">hello@sabajanelidze.com</a>.</p>
 <h2>Your rights</h2>
-<p>Because we keep nothing about you, there is nothing for us to show, correct or delete. Questions are welcome on <a href="${SITE.repo}/issues">GitHub</a>.</p>
+<p>Because we keep nothing about you, there is nothing for us to show, correct or delete. If you think we got something wrong, write to the address above.</p>
 <p>Last updated: 27 October 2026.</p>
 </article>`;
 
