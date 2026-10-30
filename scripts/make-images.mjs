@@ -4,7 +4,13 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { Resvg } from "@resvg/resvg-js";
 
 const pub = new URL("../public/", import.meta.url);
-const logo = readFileSync(new URL("favicon.svg", pub), "utf8");
+// The PNGs always use the light colours, so drop the logo's dark-mode block (resvg ignores
+// it today, but this keeps it that way). `mark` is the logo's shapes for the bigger images.
+const logo = readFileSync(new URL("favicon.svg", pub), "utf8").replace(
+  /@media[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/,
+  "",
+);
+const mark = logo.replace(/<\/?svg[^>]*>/g, "").replace(/<title>[\s\S]*?<\/title>/, "");
 
 function png(svg, width) {
   return new Resvg(svg, {
@@ -30,13 +36,13 @@ function ico(pngBytes, size) {
   return Buffer.concat([header, pngBytes]);
 }
 
-const touchIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" fill="#fdf8f1"/><g transform="translate(26 22) scale(4)">${logo.replace(/<\/?svg[^>]*>/g, "")}</g></svg>`;
+const touchIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" fill="#fdf8f1"/><g transform="translate(26 24) scale(4)">${mark}</g></svg>`;
 
 const og = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
 <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fde8bf"/><stop offset="1" stop-color="#fff4e3"/></linearGradient></defs>
 <rect width="1200" height="630" fill="#fdf8f1"/>
 <rect x="60" y="60" width="1080" height="510" rx="44" fill="url(#g)" stroke="#ecdfcb" stroke-width="2"/>
-<g transform="translate(120 120) scale(3)">${logo.replace(/<\/?svg[^>]*>/g, "")}</g>
+<g transform="translate(120 120) scale(3)">${mark}</g>
 <text x="230" y="178" font-family="Segoe UI, Arial, sans-serif" font-size="46" font-weight="800" fill="#1d2433">tooljar</text>
 <rect x="408" y="138" width="78" height="52" rx="26" fill="#0f766e"/>
 <text x="447" y="176" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="800" fill="#ffffff">IP</text>

@@ -39,6 +39,7 @@ header.top{padding:18px 0 8px}
 .bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;justify-content:space-between}
 .brand{display:flex;align-items:center;gap:9px;color:var(--text);text-decoration:none;font-weight:800;font-size:1.2rem;letter-spacing:-.01em}
 .brand .pill{background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:1px 10px;font-size:.85rem}
+.logo-jar{flex:none}.logo-jar .lid{fill:var(--accent)}.logo-jar .jar{fill:var(--honey)}
 nav ul{display:flex;flex-wrap:wrap;gap:4px;margin:0;padding:0;list-style:none}
 nav a{display:block;padding:6px 12px;border-radius:999px;color:var(--muted);text-decoration:none;font-weight:600;font-size:.95rem}
 nav a:hover{background:var(--surface-2);color:var(--text)}
@@ -134,9 +135,9 @@ export function renderPage(page: Page, analyticsToken: string): string {
 ${page.noindex ? raw('<meta name="robots" content="noindex">') : html`<link rel="canonical" href="${url}">`}
 <meta name="theme-color" content="#fdf8f1" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14161b" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png?v=2" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${SITE.name}">
 <meta property="og:title" content="${page.title}">

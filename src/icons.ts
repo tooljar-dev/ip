@@ -38,6 +38,9 @@ export const ICONS = {
   plug: icon('<path d="M9 3v5M15 3v5M7 8h10v3a5 5 0 0 1-10 0zM12 16v5"/>'),
 } as const;
 
+// The same mark as public/favicon.svg, without its <style>: an inline <style> would apply to the
+// whole page. The lid and jar take the theme colours from the page CSS (.logo-jar in layout.ts);
+// the pointer stays dark ink in both themes. 32 px keeps every edge on a whole pixel.
 export const JAR_LOGO = raw(
-  '<svg class="logo-jar" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect x="9" y="3" width="14" height="5" rx="2" fill="#0f766e"/><rect x="6" y="8" width="20" height="21" rx="6" fill="#f59e0b"/><rect x="10" y="13" width="12" height="9" rx="3" fill="#fff7e6"/><path d="M13 17.5h6" stroke="#0f766e" stroke-width="2" stroke-linecap="round"/></svg>',
+  '<svg class="logo-jar" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false"><rect class="lid" x="6" y="2" width="20" height="6" rx="3" fill="#0f766e"/><path class="jar" d="M8 10H24V12C24 14 30 13 30 18V24Q30 30 24 30H8Q2 30 2 24V18C2 13 8 14 8 12Z" fill="#f59e0b"/><path d="M12 12L24 24H20L22 28H18L16 24L12 28Z" fill="#1d2433"/></svg>',
 );
