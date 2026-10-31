@@ -111,6 +111,9 @@ describe("pickFormat", () => {
   it("gives crawlers and link-preview bots the page", () => {
     const bots = [
       "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+      // Search Console's live test; it has no "bot" in its name
+      "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36 (compatible; Google-InspectionTool/1.0;)",
+      "Mozilla/5.0 (compatible; GoogleOther)",
       "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)",
       "Slackbot-LinkExpanding 1.0 (+https://api.slack.com/robots)",
       "Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)",

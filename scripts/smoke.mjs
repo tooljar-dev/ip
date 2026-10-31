@@ -24,6 +24,13 @@ async function get(path, headers = CURL, url = `${base}${path}`) {
 const home = await get("/");
 check("curl / prints only the IP", home.res.status === 200 && IP.test(home.body), `${home.ms} ms`);
 
+// Search Console's live test sends no "Accept: text/html" and has no "bot" in its name.
+const inspect = await get("/", {
+  accept: "*/*",
+  "user-agent": "Mozilla/5.0 (compatible; Google-InspectionTool/1.0;)",
+});
+check("Google's live test gets the page", inspect.body.includes("<title>"));
+
 const json = await get("/json");
 let data = {};
 try {
