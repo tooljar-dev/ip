@@ -66,6 +66,7 @@ The API only answers about the IP that calls it. It can't look up other IP addre
 
 export function securityTxt(): string {
   return `Contact: ${SITE.repo}/security/advisories/new
+Contact: mailto:saba@tooljar.dev
 Expires: 2027-10-25T00:00:00.000Z
 Preferred-Languages: en
 Canonical: ${SITE.origin}/.well-known/security.txt
