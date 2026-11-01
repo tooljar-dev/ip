@@ -308,6 +308,21 @@ describe("pages and SEO", () => {
     expect(relay).toContain("Network: looks like a privacy relay");
   });
 
+  it("gives the likely reason on the wrong-location page", async () => {
+    const page = (cf: Record<string, unknown>) =>
+      call("/why-is-my-location-wrong", { headers: BROWSER, cf }).then((r) => r.text());
+    const isp = await page(TBILISI);
+    expect(isp).toContain("Your network: a regular internet provider");
+    expect(isp).toContain("data-tz-check");
+    expect(await page({ ...TBILISI, asn: 13335, asOrganization: "Cloudflare, Inc." })).toContain(
+      "Likely reason: a privacy relay",
+    );
+    expect(await page({ ...TBILISI, asOrganization: "M247 Europe SRL" })).toContain(
+      "Likely reason: a VPN or a server",
+    );
+    expect(await page({ ...TBILISI, country: "T1" })).toContain("You are using Tor");
+  });
+
   it("shows the IPv6 check to IPv4 visitors", async () => {
     const body = await (await call("/ipv6", { headers: BROWSER })).text();
     expect(body).toContain('data-other-ip="6"');

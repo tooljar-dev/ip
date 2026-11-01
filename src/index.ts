@@ -12,6 +12,7 @@ import { notFoundPage } from "./pages/notfound";
 import { privacyPage } from "./pages/privacy";
 import { privatePage } from "./pages/private";
 import { vpnPage } from "./pages/vpn";
+import { wrongLocationPage } from "./pages/wrong-location";
 import { reverseDns } from "./rdns";
 import { llmsTxt, robotsTxt, securityTxt, sitemapXml } from "./seo";
 import { type Env, SITE } from "./site";
@@ -57,6 +58,7 @@ const PAGES: Record<string, (v: Visitor, request: Request) => Page> = {
   "/": homePage,
   "/ipv6": ipv6Page,
   "/location": locationPage,
+  "/why-is-my-location-wrong": wrongLocationPage,
   "/vpn-check": vpnPage,
   "/public-vs-private-ip": privatePage,
   "/headers": (_v, request) => headersPage(request),

@@ -56,6 +56,7 @@ for (const path of [
   "/",
   "/ipv6",
   "/location",
+  "/why-is-my-location-wrong",
   "/vpn-check",
   "/public-vs-private-ip",
   "/headers",

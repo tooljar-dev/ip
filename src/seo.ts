@@ -6,6 +6,7 @@ export const PAGE_PATHS = [
   "/",
   "/ipv6",
   "/location",
+  "/why-is-my-location-wrong",
   "/vpn-check",
   "/public-vs-private-ip",
   "/headers",
@@ -54,6 +55,7 @@ The API only answers about the IP that calls it. It can't look up other IP addre
 
 - [What is my IPv6 address?](${o}/ipv6)
 - [What is my IP location?](${o}/location)
+- [Why is my IP location wrong? (reasons and fixes)](${o}/why-is-my-location-wrong)
 - [Am I using a VPN? (VPN and WebRTC leak check)](${o}/vpn-check)
 - [Public vs private IP address](${o}/public-vs-private-ip)
 

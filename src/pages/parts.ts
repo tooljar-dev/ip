@@ -121,6 +121,12 @@ export const GUIDES: { path: string; icon: Html; title: string; text: string }[]
     text: "Where your IP points, and how exact it is.",
   },
   {
+    path: "/why-is-my-location-wrong",
+    icon: ICONS.globe,
+    title: "Wrong location?",
+    text: "Why sites guess the wrong place, and fixes.",
+  },
+  {
     path: "/vpn-check",
     icon: ICONS.shield,
     title: "Am I on a VPN?",

@@ -71,6 +71,7 @@ ${row("Internet provider", v.org)}
 <li><strong>VPN, proxy or iCloud Private Relay.</strong> Websites see the location of that service's server.</li>
 <li><strong>Old data.</strong> Address blocks move between providers and places, and databases catch up slowly.</li>
 </ul>
+<p>More reasons, a check for your own connection and how to get it corrected: <a href="/why-is-my-location-wrong">Why is my IP location wrong?</a></p>
 <h2>What IP location never shows</h2>
 <p>Your street, your house or your name. IP location is good enough to pick a language or show prices in your currency, and that's about it.</p>
 </article>
