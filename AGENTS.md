@@ -40,7 +40,7 @@ The "what is my IP" site and free API at **https://ip.tooljar.dev**: one Cloudfl
 - `npm run dev`: local copy (real location data from Cloudflare; your IP shows as 127.0.0.1).
 - `npm run check`: Biome lint, TypeScript, tests, deploy dry run. Run it before saying a code task is done.
 - **Deploy** (only with Saba's OK): from this folder, `npm run cf:dry`, read the file list, then `npx wrangler deploy --config wrangler.jsonc`. Then `npm run smoke`.
-- Auth: wrangler uses the `CLOUDFLARE_API_TOKEN` user environment variable.
+- Auth: the Worker lives in its own Cloudflare account, "tooljar" (`account_id` in `wrangler.jsonc`). Wrangler reads `CLOUDFLARE_API_TOKEN`, so set it from the tooljar token first. PowerShell: `$env:CLOUDFLARE_API_TOKEN = [Environment]::GetEnvironmentVariable('CLOUDFLARE_API_TOKEN_TOOLJAR','User')`. The workspace's plain `CLOUDFLARE_API_TOKEN` can't reach this account.
 
 ## Rules
 
