@@ -173,6 +173,7 @@ ${page.body}
 <li><a href="/headers">HTTP headers</a></li>
 <li><a href="/api">Free IP API</a></li>
 <li><a href="/privacy">Privacy</a></li>
+<li><a href="https://email.tooljar.dev">Temp mail checker</a></li>
 <li><a href="${SITE.repo}">Source code on GitHub</a></li>
 </ul>
 </div>

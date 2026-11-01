@@ -59,6 +59,10 @@ The API only answers about the IP that calls it. It can't look up other IP addre
 - [Am I using a VPN? (VPN and WebRTC leak check)](${o}/vpn-check)
 - [Public vs private IP address](${o}/public-vs-private-ip)
 
+## Other tooljar tools
+
+- [Temp mail checker](https://email.tooljar.dev): is an email address disposable? Free page and API.
+
 ## Source
 
 - [Source code (MIT license)](${SITE.repo})
