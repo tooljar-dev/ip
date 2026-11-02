@@ -62,6 +62,7 @@ The API only answers about the IP that calls it. It can't look up other IP addre
 ## Other tooljar tools
 
 - [Temp mail checker](https://email.tooljar.dev): is an email address disposable? Free page and API.
+- [All tooljar tools](https://tooljar.dev) ([as JSON](https://tooljar.dev/tools.json))
 
 ## Source
 

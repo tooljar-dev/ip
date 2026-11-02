@@ -165,7 +165,7 @@ ${page.body}
 <footer><div class="wrap">
 <div class="cols">
 <div>
-<p><strong>tooljar IP</strong> is part of tooljar.dev: small, free, open-source tools.</p>
+<p><strong>tooljar IP</strong> is part of <a href="https://tooljar.dev">tooljar.dev</a>: small, free, open-source tools.</p>
 <p>Privacy: we don't store your IP address. No cookies and no ads.</p>
 </div>
 <ul>
@@ -174,6 +174,7 @@ ${page.body}
 <li><a href="/api">Free IP API</a></li>
 <li><a href="/privacy">Privacy</a></li>
 <li><a href="https://email.tooljar.dev">Temp mail checker</a></li>
+<li><a href="https://tooljar.dev">All tooljar tools</a></li>
 <li><a href="${SITE.repo}">Source code on GitHub</a></li>
 </ul>
 </div>
